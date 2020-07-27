@@ -80,10 +80,9 @@ namespace UnityEditor.Rendering.PostProcessing
             s_AttributeDecorators.Clear();
 
             // Look for all the valid attribute decorators
-            var types = RuntimeUtilities.GetAllAssemblyTypes()
+            var types = RuntimeUtilities.GetAllTypesDerivedFrom<AttributeDecorator>()
                             .Where(
-                                t => t.IsSubclassOf(typeof(AttributeDecorator))
-                                  && t.IsDefined(typeof(DecoratorAttribute), false)
+                                t => t.IsDefined(typeof(DecoratorAttribute), false)
                                   && !t.IsAbstract
                             );
 
@@ -252,7 +251,11 @@ namespace UnityEditor.Rendering.PostProcessing
             toggleRect.height = 13f;
 
             var menuIcon = Styling.paneOptionsIcon;
+#if UNITY_2019_3_OR_NEWER
+            var menuRect = new Rect(labelRect.xMax + 4f, labelRect.y, menuIcon.width, menuIcon.height);
+#else
             var menuRect = new Rect(labelRect.xMax + 4f, labelRect.y + 4f, menuIcon.width, menuIcon.height);
+#endif
 
             // Background rect should be full-width
             backgroundRect.xMin = 0f;
